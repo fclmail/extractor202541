@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extra1</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    textarea { width: 90%; height: 200px; margin-bottom: 10px; }
+    button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    #output { white-space: pre-wrap; background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Extract and Copy 0x Addresses</h1>
+  <textarea id="input" placeholder="Paste your text with 0x addresses here..."></textarea>
+  <br />
+  <button onclick="extractAddresses()">Extract Addresses</button>
+  <button onclick="copyAddresses()">Copy to Clipboard</button>
+  <button onclick="exportAddresses()">Export as .txt</button>
+  <h3>Extracted Addresses:</h3>
+  <div id="output"></div>
+
+  <script>
+    function extractAddresses() {
+      const text = document.getElementById('input').value;
+      const regex = /0x[a-fA-F0-9]{40}\b/g;
+      const matches = text.match(regex) || [];
+      document.getElementById('output').textContent = matches.join('\n');
+    }
+
+    function copyAddresses() {
+      const outputText = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(outputText).then(() => {
+        alert('Addresses copied to clipboard!');
+      }).catch(err => {
+        alert('Failed to copy: ' + err);
+      });
+    }
+
+    function exportAddresses() {
+      const outputText = document.getElementById('output').textContent;
+      const blob = new Blob([outputText], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'extracted_addresses.txt';
+      link.click();
+    }
+  </script>
+</body>
+</html>
